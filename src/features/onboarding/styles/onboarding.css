@@ -1,0 +1,211 @@
+/* 🌑 Base Layout */
+.onboarding-container {
+  background: radial-gradient(circle at 30% 50%, #121212, #0b0b0b 60%);
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+/* 🔸 SKILLSYNC Pixel Logo (Updated Bigger Version) */
+.logo {
+  position: absolute;
+  top: 25px;
+  right: 40px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 1.3rem; /* ⬆️ slightly increased for better visibility */
+  letter-spacing: 3px; /* wider spacing looks cleaner in pixel font */
+  color: #ffffff;
+  text-transform: uppercase;
+  user-select: none;
+  background: transparent;
+  z-index: 10;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+}
+
+/* 🧱 Onboarding Card */
+.onboarding-card {
+  background: rgba(30, 30, 30, 0.75);
+  backdrop-filter: blur(12px);
+  padding: 2.5rem 3.5rem;
+  border-radius: 1.2rem;
+  width: 720px; /* ⬆️ slightly wider */
+  height: 460px; /* ⬆️ slightly taller */
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 🟢 Step Dots */
+.step-indicators {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.2rem;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #555;
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #ffffff;
+}
+
+/* 💬 Input Field */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+
+.input-group input {
+  flex: 1;
+  background: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #333;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.input-group button {
+  background: #00cc99;
+  color: #000000;
+  font-size: 1.2rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+/* 🏷️ Horizontal Scroll Tags & Chips */
+.tag-container,
+.chips {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 12px;
+  justify-content: flex-start;
+  margin-top: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Edge, Safari */
+.tag-container::-webkit-scrollbar,
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.tag,
+.chip {
+  background: rgba(50, 50, 50, 0.85);
+  border: 1px solid #666;
+  border-radius: 20px;
+  padding: 12px 20px;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover - white outline */
+.tag:hover,
+.chip:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+/* ✅ Selected Tag - White style */
+.selected {
+  background-color: #ffffff; /* white background */
+  color: #000000; /* black text */
+  border-color: #ffffff; /* white border */
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* subtle white glow */
+}
+
+/* 🔘 Buttons */
+.buttons {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.back-btn,
+.next-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.back-btn {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+.next-btn {
+  background-color: #00cc99;
+  color: #000000;
+}
+
+/* =============================== */
+/* ✨ Centered Red–White Lines (Static, No Animation) */
+/* =============================== */
+
+.decorative-lines {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+.decorative-lines span {
+  width: 2.5px;
+  height: 130px;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, #ffffff, #ff6b6b);
+  box-shadow: 0 0 6px rgba(255, 107, 107, 0.3); /* ✨ subtle glow */
+}
+
+/* Responsive Fix */
+@media (max-width: 700px) {
+  .onboarding-card {
+    width: 90%;
+    height: auto;
+    padding: 1.8rem 1rem;
+  }
+
+  .logo {
+    font-size: 0.8rem; /* smaller on mobile */
+    right: 20px;
+  }
+}
