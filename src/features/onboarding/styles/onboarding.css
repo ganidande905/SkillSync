@@ -1,0 +1,195 @@
+
+.onboarding-container {
+    background: linear-gradient(135deg, #1e1e2f, #121212);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    font-family: "Poppins", sans-serif;
+  }
+  
+
+  .logo {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    color: #ffffff;
+    text-transform: uppercase;
+    user-select: none;
+    background: transparent;
+    z-index: 10;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.8), 0 0 12px rgba(255, 255, 255, 0.5);
+  }
+  
+  /* 🧱 Onboarding Card */
+  .onboarding-card {
+    background: rgba(40, 40, 50, 0.85);
+    backdrop-filter: blur(15px);
+    padding: 3rem 4rem;
+    border-radius: 1.5rem;
+    width: 700px;
+    height: auto;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  /* 🔘 Step Indicators */
+  .step-indicators {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .step-indicators .dot {
+    width: 12px;
+    height: 12px;
+    margin: 0 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .step-indicators .dot.active {
+    background: #3f82ff;
+    box-shadow: 0 0 8px rgba(63, 130, 255, 0.8);
+  }
+  
+  .step-indicators .dot:hover {
+    transform: scale(1.2);
+  }
+  
+  /* 🖊️ Input Group */
+  .input-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1.5rem 0;
+  }
+  
+  .input-group input {
+    width: 70%;
+    padding: 0.8rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+  .input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .input-group input:focus {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 8px rgba(63, 130, 255, 0.8);
+  }
+  
+  .input-group button {
+    margin-left: 1rem;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: #3f82ff;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .input-group button:hover {
+    background: #2f6edc;
+    box-shadow: 0 0 10px rgba(63, 130, 255, 0.8);
+  }
+  
+  /* 🏷️ Tag Container */
+  .tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+    margin: 1.5rem 0;
+  }
+  
+  .tag-container .tag {
+    padding: 0.6rem 1rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .tag-container .tag.selected {
+    background: #3f82ff;
+    box-shadow: 0 0 8px rgba(63, 130, 255, 0.8);
+  }
+  
+  .tag-container .tag:hover {
+    transform: scale(1.1);
+  }
+  
+  /* 🔘 Buttons */
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  
+  .buttons .back-btn,
+  .buttons .next-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .buttons .back-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+  
+  .buttons .back-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .buttons .next-btn {
+    background: #3f82ff;
+    color: #ffffff;
+  }
+  
+  .buttons .next-btn:hover {
+    background: #2f6edc;
+    box-shadow: 0 0 10px rgba(63, 130, 255, 0.8);
+  }
+  
+  /* 🌟 Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }

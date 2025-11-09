@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../controller/authcontroller";
 import Button from "../../../components/button";
-import Card from "../../../components/Card/Card";
+// import Card from "../../../components/Card/Card";
 import "./loginPage.css";
 
 export default function LoginPage() {
@@ -16,7 +16,7 @@ export default function LoginPage() {
     setErr("");
     const res = await loginUser({ email, password });
     if (res.success) {
-      navigate("/dashboard");
+      navigate("/onboarding/skills");
     } else {
       setErr(res.message || "Login failed");
     }
@@ -25,7 +25,7 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       {/* Left side */}
-      <div className="auth-left">
+      {/* <div className="auth-left">
         <h1 className="logo">SKILLSYNC</h1>
         <div className="card-stack">
           <div className="card-layer layer-1">
@@ -43,7 +43,7 @@ export default function LoginPage() {
             <Card bg="#ececec">Some Random Info</Card>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Right side */}
       <div className="auth-right">
@@ -79,7 +79,7 @@ export default function LoginPage() {
           </Button>
 
           <div className="auth-note">
-            Don&apos;t have an account? <Link to="/register">Sign up</Link>
+            Don't have an account? <Link to="/register">Sign up</Link>
           </div>
         </form>
       </div>
