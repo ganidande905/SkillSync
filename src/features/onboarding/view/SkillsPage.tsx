@@ -1,30 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../../onboarding/styles/onboarding.css";
 import { onboardingData, skillCategories } from "../model/onboardingModel";
 
 const SkillsPage: React.FC = () => {
-  const [skills, setSkills] = useState<string[]>(onboardingData.skills);
-  const [input, setInput] = useState("");
   const navigate = useNavigate();
 
+  // Load previously saved skills (from onboardingData)
+  const [skills, setSkills] = useState<string[]>(onboardingData.skills || []);
+  const [input, setInput] = useState("");
+
+  // Update onboardingData whenever skills change
+  useEffect(() => {
+    onboardingData.skills = skills;
+  }, [skills]);
+
+  // Toggle (select/unselect) a skill
   const toggleSkill = (skill: string) => {
-    const updated = skills.includes(skill)
-      ? skills.filter((s) => s !== skill)
-      : [...skills, skill];
-    setSkills(updated);
-    onboardingData.skills = updated;
+    setSkills((prev) =>
+      prev.includes(skill)
+        ? prev.filter((s) => s !== skill)
+        : [...prev, skill]
+    );
   };
 
+  // Add a custom skill
   const handleAdd = () => {
-    if (input.trim()) {
-      const updated = [...skills, input.trim()];
-      setSkills(updated);
-      onboardingData.skills = updated;
+    const newSkill = input.trim();
+    if (!newSkill) return;
+
+    // Prevent duplicates
+    if (skills.includes(newSkill)) {
       setInput("");
+      return;
     }
+
+    setSkills((prev) => [...prev, newSkill]);
+    setInput("");
   };
+
+  // Predefined skills (from model)
+  const predefinedSkills = skillCategories
+    .slice(0, 4)
+    .flatMap((category) => category.items.slice(0, 8));
+
+  // Custom skills = ones not in predefined list
+  const customSkills = skills.filter((s) => !predefinedSkills.includes(s));
 
   return (
     <motion.div
@@ -37,6 +59,7 @@ const SkillsPage: React.FC = () => {
       <h1 className="logo">SKILLSYNC</h1>
 
       <div className="onboarding-card">
+        {/* Step Indicators */}
         <div className="step-indicators">
           <div className="dot active" onClick={() => navigate("/onboarding/skills")}></div>
           <div className="dot" onClick={() => navigate("/onboarding/interests")}></div>
@@ -44,8 +67,9 @@ const SkillsPage: React.FC = () => {
         </div>
 
         <h2>Add Your Skills</h2>
-        <p>Choose your technical and soft skills.</p>
+        <p>Choose your technical and soft skills, or add your own below.</p>
 
+        {/* Input Field */}
         <div className="input-group">
           <input
             value={input}
@@ -55,20 +79,32 @@ const SkillsPage: React.FC = () => {
           <button onClick={handleAdd}>+</button>
         </div>
 
+        {/* Skill Tags */}
         <div className="tag-container">
-          {skillCategories.slice(0, 4).flatMap((category) =>
-            category.items.slice(0, 8).map((skill) => (
-              <button
-                key={skill}
-                className={`tag ${skills.includes(skill) ? "selected" : ""}`}
-                onClick={() => toggleSkill(skill)}
-              >
-                {skill}
-              </button>
-            ))
-          )}
+          {/* Predefined skills */}
+          {predefinedSkills.map((skill) => (
+            <button
+              key={skill}
+              className={`tag ${skills.includes(skill) ? "selected" : ""}`}
+              onClick={() => toggleSkill(skill)}
+            >
+              {skill}
+            </button>
+          ))}
+
+          {/* Custom skills (added manually) */}
+          {customSkills.map((skill) => (
+            <button
+              key={skill}
+              className={`tag selected`}
+              onClick={() => toggleSkill(skill)}
+            >
+              {skill} ✕
+            </button>
+          ))}
         </div>
 
+        {/* Navigation */}
         <div className="buttons">
           <button className="back-btn" disabled>
             Back

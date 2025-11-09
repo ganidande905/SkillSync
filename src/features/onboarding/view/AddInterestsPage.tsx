@@ -1,27 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../../onboarding/styles/onboarding.css";
 import { onboardingData, interestCategories } from "../model/onboardingModel";
 
 const AddInterestsPage: React.FC = () => {
-  const [interests, setInterests] = useState<string[]>(onboardingData.interests);
-  const [input, setInput] = useState("");
   const navigate = useNavigate();
+
+  // Load from localStorage first, fallback to onboardingData
+  const [interests, setInterests] = useState<string[]>(() => {
+    const stored = localStorage.getItem("interests");
+    return stored ? JSON.parse(stored) : onboardingData.interests || [];
+  });
+
+  const [input, setInput] = useState("");
+
+  // Keep both onboardingData and localStorage synced
+  useEffect(() => {
+    onboardingData.interests = interests;
+    localStorage.setItem("interests", JSON.stringify(interests));
+  }, [interests]);
 
   const toggleInterest = (interest: string) => {
     const updated = interests.includes(interest)
       ? interests.filter((i) => i !== interest)
       : [...interests, interest];
     setInterests(updated);
-    onboardingData.interests = updated;
   };
 
   const handleAdd = () => {
-    if (input.trim()) {
+    if (input.trim() && !interests.includes(input.trim())) {
       const updated = [...interests, input.trim()];
       setInterests(updated);
-      onboardingData.interests = updated;
       setInput("");
     }
   };
@@ -55,7 +65,7 @@ const AddInterestsPage: React.FC = () => {
           <button onClick={handleAdd}>+</button>
         </div>
 
-        {/* Reduce list to prevent scroll */}
+        {/* Reduced interest list */}
         <div className="tag-container">
           {interestCategories.slice(0, 3).flatMap((category) =>
             category.items.slice(0, 8).map((interest) => (
@@ -69,6 +79,33 @@ const AddInterestsPage: React.FC = () => {
             ))
           )}
         </div>
+
+        {/* Show added custom interests */}
+        {interests
+          .filter(
+            (interest) =>
+              !interestCategories.some((cat) => cat.items.includes(interest))
+          )
+          .length > 0 && (
+          <div className="custom-interests">
+            <div className="tag-container">
+              {interests
+                .filter(
+                  (interest) =>
+                    !interestCategories.some((cat) => cat.items.includes(interest))
+                )
+                .map((interest) => (
+                  <button
+                    key={interest}
+                    className="tag selected"
+                    onClick={() => toggleInterest(interest)}
+                  >
+                    {interest}
+                  </button>
+                ))}
+            </div>
+          </div>
+        )}
 
         <div className="buttons">
           <button className="back-btn" onClick={() => navigate("/onboarding/skills")}>
