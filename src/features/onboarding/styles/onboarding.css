@@ -22,7 +22,7 @@
   letter-spacing: 4px;
   color: #ffffff;
   text-transform: uppercase;
-  user-select: none;
+  -webkit-user-select: none;
   z-index: 10;
   text-shadow: 0 0 6px rgba(255, 255, 255, 0.8), 0 0 12px rgba(255, 255, 255, 0.5);
 }
@@ -31,6 +31,7 @@
 .onboarding-card {
   background: rgba(40, 40, 50, 0.85);
   backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   padding: 3rem 4rem;
   border-radius: 1.5rem;
   width: 700px;
