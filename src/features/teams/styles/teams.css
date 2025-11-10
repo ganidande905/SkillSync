@@ -1,0 +1,171 @@
+.teams-content {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 0 2rem 0;
+}
+.teams-heading {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.teams-heading h1 {
+  font-size: 1.45rem;
+  font-weight: bold;
+}
+.teams-desc {
+  color: #767676;
+  margin-top: 0.3rem;
+}
+.teams-status {
+  background: #f3f4f8;
+  color: #333;
+  display: inline-block;
+  border-radius: 0.8rem;
+  margin-top: 0.7rem;
+  font-size: 1rem;
+  padding: 0.38rem 1.15rem;
+}
+.teams-card {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 1px 8px rgba(40,40,70,.10);
+  padding: 1.4rem;
+  margin-bottom: 1.4rem;
+}
+.teams-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+.teams-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+.teams-subtitle {
+  color: #888;
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+.teams-match-badge {
+  background: #22c55e;
+  color: #fff;
+  border-radius: 1em;
+  font-size: 0.93rem;
+  padding: 0.25em 1em;
+  font-weight: 500;
+}
+.teams-about {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+}
+.teams-label {
+  color: #333;
+  font-size: 0.99rem;
+  font-weight: 500;
+  margin: 1.1rem 0 0.4rem 0;
+}
+.teams-tags-row {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.teams-tag {
+  background: #e2e8f0;
+  color: #374151;
+  padding: 0.45rem 1.15rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.teams-members-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+}
+.teams-member-card {
+  background: #f4f5f7;
+  border-radius: 0.7rem;
+  padding: 0.8rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.teams-member-initials {
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: #171f37;
+  color: #fff;
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.75rem;
+}
+.teams-member-name {
+  font-weight: 600;
+}
+.teams-member-role {
+  font-size: 0.99rem;
+  color: #888;
+}
+.teams-member-tags {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+.teams-action-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.teams-pass-btn {
+  background: #e2e8f0;
+  color: #555;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.teams-join-btn {
+  background: #171f37;
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.teams-matches-section {
+  margin-top: 1.1rem;
+}
+.teams-match-card {
+  background: #f4f5f7;
+  border-radius: 0.7rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.9rem;
+  gap: 1rem;
+}
+.teams-match-title {
+  font-weight: 600;
+  margin-right: 0.6rem;
+}
+.teams-match-desc {
+  color: #767676;
+  font-size: 1rem;
+  margin-right: auto;
+}
+.teams-chat-btn {
+  background: #e2e8f0; color: #171f37; border: none;
+  border-radius: 0.7rem; padding: 0.7rem 1.3rem;
+  font-size: 1rem; cursor: pointer;
+}
