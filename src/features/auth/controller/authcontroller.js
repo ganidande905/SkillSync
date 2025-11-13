@@ -77,10 +77,9 @@ export async function registerUser(data) {
 }
 
 /**
-
- * @param {string} query 
- * @returns {Promise<string[]>} 
-
+ * @param {string} query
+ * @returns {Promise<string[]>}
+ */
 export async function fetchUniversitySuggestions(query) {
   if (!query || query.length < 2) return [];
 
@@ -103,8 +102,6 @@ export async function fetchUniversitySuggestions(query) {
   }
 }
 
-/**
- */
 export function getCurrentUserId() {
   const id = localStorage.getItem("userId");
   return id ? parseInt(id, 10) : null;
