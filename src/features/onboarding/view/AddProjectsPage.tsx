@@ -2,76 +2,79 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../../onboarding/styles/onboarding.css";
-import { onboardingData } from "../model/onboardingModel";
+import { onboardingData, type PastProject } from "../model/onboardingModel";
+import { submitPastProjects } from "../controller/Onboardingcontroller";
 
-interface Project {
-  title: string;
-  description: string;
-  technologies: string;
-}
+
 
 const AddProjectsPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // Load from localStorage or fallback to onboardingData
-  const [projects, setProjects] = useState<Project[]>(() => {
+  const [projects, setProjects] = useState<PastProject[]>(() => {
     const stored = localStorage.getItem("projects");
-    return stored ? JSON.parse(stored) : onboardingData.projects || [];
+    return stored ? JSON.parse(stored) : (onboardingData.projects as unknown) || [];
   });
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [technologies, setTechnologies] = useState("");
   const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
-  // Update onboarding model and local storage
   useEffect(() => {
+    // Keep only titles in onboardingData (as before)
     onboardingData.projects = projects.map((project) => project.title);
     localStorage.setItem("projects", JSON.stringify(projects));
   }, [projects]);
 
-  // Add project
   const addProject = () => {
     if (!title.trim()) {
       setError("Please enter a project title.");
       return;
     }
 
-    const newProject: Project = {
+    const newProject: PastProject = {
       title: title.trim(),
       description: description.trim(),
       technologies: technologies.trim(),
     };
 
-    const updated = [...projects, newProject];
-    setProjects(updated);
+    setProjects((prev) => [...prev, newProject]);
 
-    // Reset fields and clear error
     setTitle("");
     setDescription("");
     setTechnologies("");
     setError("");
   };
 
-  // Remove project
   const removeProject = (index: number) => {
     const updated = [...projects];
     updated.splice(index, 1);
     setProjects(updated);
   };
 
-  // Handle Finish
-  const handleFinish = () => {
+  const handleFinish = async () => {
     if (projects.length === 0) {
       setError("Please add at least one project before continuing.");
       return;
     }
 
-    // Save to onboarding data and localStorage
+    setSaving(true);
+    setError("");
+
+    // Keep onboardingData in sync
     onboardingData.projects = projects.map((p) => p.title);
     localStorage.setItem("onboardingData", JSON.stringify(onboardingData));
 
-    // Navigate to dashboard
+    const res = await submitPastProjects(undefined, projects);
+
+    setSaving(false);
+
+    if (!res.success) {
+      setError(res.message || "Failed to save projects");
+      return;
+    }
+
     navigate("/dashboard");
   };
 
@@ -86,17 +89,24 @@ const AddProjectsPage: React.FC = () => {
       <h1 className="logo">SKILLSYNC</h1>
 
       <div className="onboarding-card">
-        {/* Step indicators */}
         <div className="step-indicators">
-          <div className="dot" onClick={() => navigate("/onboarding/skills")}></div>
-          <div className="dot" onClick={() => navigate("/onboarding/interests")}></div>
-          <div className="dot active" onClick={() => navigate("/onboarding/projects")}></div>
+          <div
+            className="dot"
+            onClick={() => navigate("/onboarding/skills")}
+          ></div>
+          <div
+            className="dot"
+            onClick={() => navigate("/onboarding/interests")}
+          ></div>
+          <div
+            className="dot active"
+            onClick={() => navigate("/onboarding/projects")}
+          ></div>
         </div>
 
         <h2>Past Projects</h2>
         <p>Tell us about the projects you’ve worked on or contributed to.</p>
 
-        {/* Input form */}
         <div className="input-group vertical">
           <input
             type="text"
@@ -116,23 +126,29 @@ const AddProjectsPage: React.FC = () => {
             value={technologies}
             onChange={(e) => setTechnologies(e.target.value)}
           />
-          <button onClick={addProject}>Add Project</button>
+          <button type="button" onClick={addProject}>
+            Add Project
+          </button>
         </div>
 
         {error && <p className="error-message">{error}</p>}
 
-        {/* Display added projects */}
         <div className="projects-list">
           {projects.length > 0 ? (
             projects.map((proj, i) => (
               <div key={i} className="project-card">
                 <div className="project-header">
                   <h3>{proj.title}</h3>
-                  <span className="remove-btn" onClick={() => removeProject(i)}>
+                  <span
+                    className="remove-btn"
+                    onClick={() => removeProject(i)}
+                  >
                     ✕
                   </span>
                 </div>
-                {proj.description && <p className="desc">{proj.description}</p>}
+                {proj.description && (
+                  <p className="desc">{proj.description}</p>
+                )}
                 {proj.technologies && (
                   <p className="tech">
                     <strong>Technologies:</strong> {proj.technologies}
@@ -145,13 +161,20 @@ const AddProjectsPage: React.FC = () => {
           )}
         </div>
 
-        {/* Navigation buttons */}
         <div className="buttons">
-          <button className="back-btn" onClick={() => navigate("/onboarding/interests")}>
+          <button
+            className="back-btn"
+            onClick={() => navigate("/onboarding/interests")}
+            disabled={saving}
+          >
             Back
           </button>
-          <button className="next-btn" onClick={handleFinish}>
-            Finish
+          <button
+            className="next-btn"
+            onClick={handleFinish}
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Finish"}
           </button>
         </div>
       </div>

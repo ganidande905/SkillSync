@@ -1,25 +1,29 @@
-// =======================================
-// Onboarding Data Model
-// =======================================
+export type SkillLevel = "beginner" | "intermediate" | "advanced";
+
+export interface SelectedSkill {
+  name: string;
+  level: SkillLevel;
+}
+
+export interface PastProject {
+  title: string;
+  description: string;
+  technologies: string;
+}
 
 export interface OnboardingData {
-  skills: {
-    name: string;
-    level: "beginner" | "intermediate" | "advanced";
-  }[];
+  skills: SelectedSkill[];
   interests: string[];
   projects: string[];
-  university?: string;
 }
 
 export const onboardingData: OnboardingData = {
   skills: [],
   interests: [],
   projects: [],
-  university: "",
 };
 
-// Save onboarding data
+
 export const saveOnboardingData = (data: OnboardingData) => {
   localStorage.setItem("onboardingData", JSON.stringify(data));
 };
@@ -29,10 +33,6 @@ export const getOnboardingData = (): OnboardingData => {
   const stored = localStorage.getItem("onboardingData");
   return stored ? JSON.parse(stored) : onboardingData;
 };
-
-// =======================================
-// Skill Categories (unchanged)
-// =======================================
 
 export const skillCategories = [
   {
@@ -165,10 +165,6 @@ export const skillCategories = [
     ],
   },
 ];
-
-// =======================================
-// Interest Categories (unchanged)
-// =======================================
 
 export const interestCategories = [
   {
