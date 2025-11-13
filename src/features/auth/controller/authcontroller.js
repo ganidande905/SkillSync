@@ -1,12 +1,6 @@
-// src/features/auth/controller/authController.js
-
 import { loginApi, registerApi } from "../model/authModel.js";
-import.meta.env.VITE_BASE_URL;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-/**
- * LOGIN USER
- */
 export async function loginUser(credentials) {
   try {
     if (!credentials.email || !credentials.password) {
@@ -19,8 +13,25 @@ export async function loginUser(credentials) {
     });
 
     if (res.id || res.name) {
-      if (res.token) localStorage.setItem("authToken", res.token);
-      return { success: true, message: "Login successful!" };
+      if (res.token) {
+        localStorage.setItem("authToken", res.token);
+      }
+
+      if (res.id) {
+        localStorage.setItem("userId", String(res.id));
+      }
+      if (res.email) {
+        localStorage.setItem("userEmail", res.email);
+      }
+      if (res.name) {
+        localStorage.setItem("userName", res.name);
+      }
+
+      return {
+        success: true,
+        message: "Login successful!",
+        userId: res.id,
+      };
     }
 
     return { success: false, message: res.detail || "Invalid credentials" };
@@ -30,9 +41,6 @@ export async function loginUser(credentials) {
   }
 }
 
-/**
- * REGISTER USER
- */
 export async function registerUser(data) {
   try {
     if (!data.email || !data.name || !data.password || !data.university) {
@@ -47,21 +55,32 @@ export async function registerUser(data) {
     });
 
     if (res.id) {
-      return { success: true, message: "Registration successful!" };
+      localStorage.setItem("userId", String(res.id));
+      localStorage.setItem("userEmail", res.email || data.email);
+      localStorage.setItem("userName", res.name || data.name);
+
+      return {
+        success: true,
+        message: "Registration successful!",
+        userId: res.id,
+      };
     }
 
     return { success: false, message: res.detail || "Registration failed" };
   } catch (error) {
     console.error("Registration error:", error);
-    return { success: false, message: "An error occurred during registration" };
+    return {
+      success: false,
+      message: "An error occurred during registration",
+    };
   }
 }
 
 /**
- * FETCH UNIVERSITY SUGGESTIONS (India Only)
- * @param {string} query - User-typed university name
- * @returns {Promise<string[]>} - List of up to 5 suggestions
- */
+
+ * @param {string} query 
+ * @returns {Promise<string[]>} 
+
 export async function fetchUniversitySuggestions(query) {
   if (!query || query.length < 2) return [];
 
@@ -73,7 +92,6 @@ export async function fetchUniversitySuggestions(query) {
     );
     const data = await res.json();
 
-    // Filter for India universities only
     const names = data
       .filter((u) => u.country === "India")
       .map((u) => u.name);
@@ -83,4 +101,11 @@ export async function fetchUniversitySuggestions(query) {
     console.error("Error fetching universities:", error);
     return [];
   }
+}
+
+/**
+ */
+export function getCurrentUserId() {
+  const id = localStorage.getItem("userId");
+  return id ? parseInt(id, 10) : null;
 }
