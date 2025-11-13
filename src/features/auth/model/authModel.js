@@ -1,45 +1,55 @@
-// Simulated user storage (in a real app, this would be a database)
-let users = [
-  { email: "test@example.com", password: "123456", name: "Test User" }
-];
+// src/features/auth/model/authModel.js
 
-export async function loginApi({ email, password }) {
-  // Basic validation
-  if (!email || !password) {
-    return { success: false, message: "Email and password are required" };
+/**
+ * Call login API
+ * @param {string} url 
+ * @param {Object} credentials 
+ * @returns {Promise<Object>}
+ */
+export async function loginApi(url, credentials) {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Login API error:", error);
+    return { success: false, message: "Network error" };
   }
-
-  // For testing: Accept any email/password combination that's valid
-  if (email.includes('@') && password.length >= 6) {
-    return { 
-      success: true, 
-      token: "dummy-token", 
-      user: { 
-        email,
-        name: email.split('@')[0] 
-      } 
-    };
-  }
-
-  return { success: false, message: "Invalid credentials. Password should be at least 6 characters." };
 }
 
-export async function registerApi({ fullName, email, password }) {
-  // Basic validation
-  if (!email || !password || !fullName) {
-    return { success: false, message: "All fields are required" };
+/**
+ * Call register API
+ * @param {string} url 
+ * @param {Object} data 
+ * @returns {Promise<Object>}
+ */
+export async function registerApi(url, data) {
+  try {
+    console.log("🔸 Sending register request to:", url);
+    console.log("🔸 With data:", data);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const text = await response.text();
+    console.log("Raw Register Response:", response.status, text);
+
+    try {
+      const json = JSON.parse(text);
+      console.log(" Parsed JSON:", json);
+      return json;
+    } catch {
+      console.error("Invalid JSON response from backend");
+      return { success: false, message: "Invalid JSON response from server" };
+    }
+  } catch (error) {
+    console.error(" Register API network error:", error);
+    return { success: false, message: "Network error" };
   }
-
-  if (!email.includes('@')) {
-    return { success: false, message: "Invalid email format" };
-  }
-
-  if (password.length < 6) {
-    return { success: false, message: "Password must be at least 6 characters" };
-  }
-
-  // Store the new user (in a real app, this would go to a database)
-  users.push({ email, password, name: fullName });
-
-  return { success: true, userId: users.length };
 }

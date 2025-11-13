@@ -1,104 +1,66 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { registerUser } from "../controller/authcontroller";
-import Button from "../../../components/button";
+import React, { useState } from "react";
+import { registerUser } from "../controller/authcontroller.js";
+import { Link } from "react-router-dom";
 
-export default function RegisterPage() {
-  const [fullName, setFullName] = useState("");
+
+const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [err, setErr] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErr("");
+    setLoading(true);
+    setMessage("");
 
-    if (password !== confirmPassword) {
-      setErr("Passwords do not match");
-      return;
-    }
+    const res = await registerUser({ email, name, password });
+    setLoading(false);
 
-    const res = await registerUser({ fullName, email, password });
     if (res.success) {
-      navigate("/login");
+      setMessage("Registration successful! You can now login.");
     } else {
-      setErr(res.message || "Registration failed");
+      setMessage(res.message || "Registration failed");
     }
-  }
+  };
 
   return (
     <div className="auth-page">
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>Create account</h2>
-        <div className="auth-sub">Join Skill Sync to find your perfect team</div>
-        {err && <p className="error-msg">{err}</p>}
-
-        <label htmlFor="fullname">Full Name</label>
+      <form className="auth-form" onSubmit={handleRegister}>
+        <h2>Register</h2>
         <input
-          id="fullname"
-          className="auth-input"
-          type="text"
-          placeholder="Enter your full name"
-          value={fullName}
-          onChange={e => setFullName(e.target.value)}
-          required
-          autoComplete="name"
-        />
-
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          className="auth-input"
           type="email"
-          placeholder="Enter your email"
+          className="auth-input"
+          placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-          autoComplete="email"
+          onChange={(e) => setEmail(e.target.value)}
         />
-
-        <label htmlFor="password">Password</label>
         <input
-          id="password"
+          type="text"
           className="auth-input"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
           type="password"
-          placeholder="Enter your password"
+          className="auth-input"
+          placeholder="Password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-          autoComplete="new-password"
-          minLength={8}
+          onChange={(e) => setPassword(e.target.value)}
         />
-
-        <label htmlFor="confirm">Confirm Password</label>
-        <input
-          id="confirm"
-          className="auth-input"
-          type="password"
-          placeholder="Confirm your password"
-          value={confirmPassword}
-          onChange={e => setConfirmPassword(e.target.value)}
-          required
-          autoComplete="new-password"
-          minLength={8}
-        />
-
-        <Button 
-          type="submit" 
-          variant="primary"
-          size="medium"
-          fullWidth
-          disabled={!fullName || !email || !password || !confirmPassword}
-        >
-          Create Account
-        </Button>
-
-        <div className="auth-note">
-          Already have an account? <Link to="/login">Sign in</Link>
-        </div>
+        <button className="ss-btn ss-btn-full ss-btn-primary" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
+        {message && <p className="error-msg">{message}</p>}
+        <p className="auth-note">
+          Already have an account?
+          <Link to="/"> Login</Link>
+        </p>
       </form>
     </div>
   );
-}
+};
+
+export default RegisterPage;
