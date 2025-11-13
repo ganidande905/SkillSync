@@ -4,10 +4,11 @@ import { registerUser } from "../controller/authcontroller";
 import Button from "../../../components/button";
 
 export default function RegisterPage() {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [collegeName, setCollegeName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [err, setErr] = useState("");
   const navigate = useNavigate();
 
@@ -20,7 +21,7 @@ export default function RegisterPage() {
       return;
     }
 
-    const res = await registerUser({ fullName, email, password });
+    const res = await registerUser({ name, email, password });
     if (res.success) {
       navigate("/login");
     } else {
@@ -35,53 +36,55 @@ export default function RegisterPage() {
         <div className="auth-sub">Join Skill Sync to find your perfect team</div>
         {err && <p className="error-msg">{err}</p>}
 
-        <label htmlFor="fullname">Full Name</label>
+        <label>Name</label>
         <input
-          id="fullname"
-          className="auth-input"
           type="text"
+          className="auth-input"
           placeholder="Enter your full name"
-          value={fullName}
-          onChange={e => setFullName(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
-          autoComplete="name"
         />
 
-        <label htmlFor="email">Email</label>
+        <label>Email</label>
         <input
-          id="email"
-          className="auth-input"
           type="email"
+          className="auth-input"
           placeholder="Enter your email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           required
-          autoComplete="email"
         />
 
-        <label htmlFor="password">Password</label>
+        <label>College Name</label>
         <input
-          id="password"
+          type="text"
           className="auth-input"
+          placeholder="Enter your college name"
+          value={collegeName}
+          onChange={(e) => setCollegeName(e.target.value)}
+          required
+        />
+
+        <label>Password</label>
+        <input
           type="password"
+          className="auth-input"
           placeholder="Enter your password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           required
-          autoComplete="new-password"
           minLength={8}
         />
 
-        <label htmlFor="confirm">Confirm Password</label>
+        <label>Confirm Password</label>
         <input
-          id="confirm"
-          className="auth-input"
           type="password"
+          className="auth-input"
           placeholder="Confirm your password"
           value={confirmPassword}
-          onChange={e => setConfirmPassword(e.target.value)}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           required
-          autoComplete="new-password"
           minLength={8}
         />
 
@@ -90,7 +93,7 @@ export default function RegisterPage() {
           variant="primary"
           size="medium"
           fullWidth
-          disabled={!fullName || !email || !password || !confirmPassword}
+          disabled={!name || !email || !password || !confirmPassword}
         >
           Create Account
         </Button>
