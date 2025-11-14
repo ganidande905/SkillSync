@@ -2,17 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../../onboarding/styles/onboarding.css";
-import { onboardingData, type PastProject } from "../model/onboardingModel";
+
 import { submitPastProjects } from "../controller/Onboardingcontroller";
-
-
+import {
+  onboardingData,
+  type PastProject,
+  saveOnboardingData,
+} from "../model/onboardingModel";
 
 const AddProjectsPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [projects, setProjects] = useState<PastProject[]>(() => {
     const stored = localStorage.getItem("projects");
-    return stored ? JSON.parse(stored) : (onboardingData.projects as unknown) || [];
+    return stored
+      ? JSON.parse(stored)
+      : onboardingData.projects || [];
   });
 
   const [title, setTitle] = useState("");
@@ -22,8 +27,8 @@ const AddProjectsPage: React.FC = () => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    // Keep only titles in onboardingData (as before)
-    onboardingData.projects = projects.map((project) => project.title);
+    onboardingData.projects = projects;  
+    saveOnboardingData();
     localStorage.setItem("projects", JSON.stringify(projects));
   }, [projects]);
 
@@ -62,9 +67,8 @@ const AddProjectsPage: React.FC = () => {
     setSaving(true);
     setError("");
 
-    // Keep onboardingData in sync
-    onboardingData.projects = projects.map((p) => p.title);
-    localStorage.setItem("onboardingData", JSON.stringify(onboardingData));
+    onboardingData.projects = projects;
+    saveOnboardingData();
 
     const res = await submitPastProjects(undefined, projects);
 
@@ -75,6 +79,7 @@ const AddProjectsPage: React.FC = () => {
       return;
     }
 
+    // 🎉 Redirect to dashboard
     navigate("/dashboard");
   };
 
@@ -90,18 +95,9 @@ const AddProjectsPage: React.FC = () => {
 
       <div className="onboarding-card">
         <div className="step-indicators">
-          <div
-            className="dot"
-            onClick={() => navigate("/onboarding/skills")}
-          ></div>
-          <div
-            className="dot"
-            onClick={() => navigate("/onboarding/interests")}
-          ></div>
-          <div
-            className="dot active"
-            onClick={() => navigate("/onboarding/projects")}
-          ></div>
+          <div className="dot" onClick={() => navigate("/onboarding/skills")}></div>
+          <div className="dot" onClick={() => navigate("/onboarding/interests")}></div>
+          <div className="dot active" onClick={() => navigate("/onboarding/projects")}></div>
         </div>
 
         <h2>Past Projects</h2>
@@ -115,7 +111,7 @@ const AddProjectsPage: React.FC = () => {
             onChange={(e) => setTitle(e.target.value)}
           />
           <textarea
-            placeholder="Short Description (what you built, your role, etc.)"
+            placeholder="Short Description"
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -126,6 +122,7 @@ const AddProjectsPage: React.FC = () => {
             value={technologies}
             onChange={(e) => setTechnologies(e.target.value)}
           />
+
           <button type="button" onClick={addProject}>
             Add Project
           </button>
@@ -139,16 +136,12 @@ const AddProjectsPage: React.FC = () => {
               <div key={i} className="project-card">
                 <div className="project-header">
                   <h3>{proj.title}</h3>
-                  <span
-                    className="remove-btn"
-                    onClick={() => removeProject(i)}
-                  >
+                  <span className="remove-btn" onClick={() => removeProject(i)}>
                     ✕
                   </span>
                 </div>
-                {proj.description && (
-                  <p className="desc">{proj.description}</p>
-                )}
+
+                {proj.description && <p className="desc">{proj.description}</p>}
                 {proj.technologies && (
                   <p className="tech">
                     <strong>Technologies:</strong> {proj.technologies}

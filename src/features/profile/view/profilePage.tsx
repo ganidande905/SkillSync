@@ -1,63 +1,135 @@
-// src/features/profile/view/profilepage.tsx
-// import React from "react";
-import { getProfileData } from "../controller/profileController";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loadProfile } from "../controller/profileController";
 import "../styles/profile.css";
 
 export default function ProfilePage() {
-  const user = getProfileData();
+  const navigate = useNavigate();
+
+  const userId = Number(localStorage.getItem("userId") || 0);
+  const userName = localStorage.getItem("userName") || "SkillSync user";
+  const userEmail = localStorage.getItem("userEmail") || "";
+
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData2() {
+      try {
+        setLoading(true);
+        const profile = await loadProfile(userId, userName, userEmail);
+        setData(profile);
+      } catch (err) {
+        console.error(err);
+        setError(
+          err instanceof Error ? err.message : "Failed to load profile"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (userId) {
+      fetchData2();
+    }
+  }, [userId, userName, userEmail]);
+
+  if (loading) {
+    return <div className="profile-loading">Loading profile…</div>;
+  }
+
+  if (error || !data) {
+    return (
+      <div className="profile-loading">
+        {error || "Unable to load profile"}
+      </div>
+    );
+  }
 
   return (
-    <div className="profile-content">
-      <h1 className="profile-title">{user.name}</h1>
-      <div className="profile-email">{user.email}</div>
+    <div className="profile-shell">
+      <h1 className="profile-title">{data.name}</h1>
+      <div className="profile-email">{data.email}</div>
 
       <div className="profile-topstats">
-        {user.stats.map((stat, i) => (
-          <div className="profile-topstat-card" key={i}>
-            <div className="profile-topstat-value">{stat.value}</div>
-            <div className="profile-topstat-label">{stat.label}</div>
-          </div>
-        ))}
-        <button className="profile-edit-btn">Edit Profile</button>
+        <div className="profile-topstat-card">
+          <div className="profile-topstat-value">{data.projectsCount}</div>
+          <div className="profile-topstat-label">Projects</div>
+        </div>
+        <div className="profile-topstat-card">
+          <div className="profile-topstat-value">{data.teamsAccepted}</div>
+          <div className="profile-topstat-label">Teams Joined</div>
+        </div>
+        <div className="profile-topstat-card">
+          <div className="profile-topstat-value">{data.teamsPending}</div>
+          <div className="profile-topstat-label">Pending Invites</div>
+        </div>
+
+        <button
+          className="profile-edit-btn"
+          onClick={() => navigate("/onboarding/skills")}
+        >
+          Edit Profile
+        </button>
       </div>
 
-      <div className="profile-section">
-        <div className="profile-section-title">Skills <span className="profile-edit-icon">✏️</span></div>
+      {/* Skills */}
+      <div className="profile-section glass">
+        <div className="profile-section-title">
+          Skills <span className="profile-edit-icon">✏️</span>
+        </div>
         <div className="profile-tags">
-          {user.skills.map(s => (
-            <span className="profile-tag" key={s}>{s}</span>
+          {data.skills.map((s: string) => (
+            <span className="profile-tag" key={s}>
+              {s}
+            </span>
           ))}
         </div>
       </div>
 
-      <div className="profile-section">
-        <div className="profile-section-title">Interests <span className="profile-edit-icon">✏️</span></div>
+      {/* Interests */}
+      <div className="profile-section glass">
+        <div className="profile-section-title">
+          Interests <span className="profile-edit-icon">✏️</span>
+        </div>
         <div className="profile-tags">
-          {user.interests.map(i => (
-            <span className="profile-tag" key={i}>{i}</span>
+          {data.interests.map((i: string) => (
+            <span className="profile-tag" key={i}>
+              {i}
+            </span>
           ))}
         </div>
       </div>
 
-      <div className="profile-section">
-        <div className="profile-section-title">Past Projects <span className="profile-edit-icon">✏️</span></div>
+      {/* Past Projects */}
+      <div className="profile-section glass">
+        <div className="profile-section-title">
+          Past Projects <span className="profile-edit-icon">✏️</span>
+        </div>
         <div className="profile-projects">
-          {user.projects.map((p, idx) => (
-            <div className="profile-project-card" key={idx}>
-              <div className="profile-project-title">{p.title}</div>
+          {data.pastProjects.map((p: any) => (
+            <div className="profile-project-card" key={p.id}>
+              <div className="profile-project-title">{p.project_title}</div>
               <div className="profile-project-desc">{p.description}</div>
-              <div className="profile-project-year">📅 {p.year}</div>
+              <div className="profile-project-tech">
+                {p.technologies_used}
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="profile-section">
+      {/* Recent Activity */}
+      <div className="profile-section glass">
         <div className="profile-section-title">Recent Activity</div>
         <div className="profile-activity-list">
-          {user.activity.map((a, idx) => (
+          {data.recentActivity.map((a: any, idx: number) => (
             <div className="profile-activity-item" key={idx}>
-              <span className="profile-activity-dot" style={{ background: a.color }}></span>
+              <span
+                className="profile-activity-dot"
+                style={{ background: a.color }}
+              />
               <span>{a.text}</span>
               <span className="profile-activity-time">{a.time}</span>
             </div>

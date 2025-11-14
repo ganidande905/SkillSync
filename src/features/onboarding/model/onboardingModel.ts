@@ -1,38 +1,60 @@
-export type SkillLevel = "beginner" | "intermediate" | "advanced";
+import axios from "axios";
 
-export interface SelectedSkill {
-  name: string;
-  level: SkillLevel;
-}
+export type SkillLevel = "beginner" | "intermediate" | "advanced";
 
 export interface PastProject {
   title: string;
-  description: string;
-  technologies: string;
+  description?: string;
+  technologies?: string;
+}
+
+export interface SelectedSkill {
+  name: string;
+  level: string;
 }
 
 export interface OnboardingData {
   skills: SelectedSkill[];
   interests: string[];
-  projects: string[];
+  projects: PastProject[];
 }
 
-export const onboardingData: OnboardingData = {
-  skills: [],
-  interests: [],
-  projects: [],
-};
+export const onboardingData: OnboardingData =
+  JSON.parse(localStorage.getItem("onboardingData") || "{}") || {
+    skills: [],
+    interests: [],
+    projects: [],
+  };
 
+export function saveOnboardingData() {
+  localStorage.setItem("onboardingData", JSON.stringify(onboardingData));
+}
 
-export const saveOnboardingData = (data: OnboardingData) => {
-  localStorage.setItem("onboardingData", JSON.stringify(data));
-};
+export function getOnboardingData(): OnboardingData {
+  return onboardingData;
+}
 
-// Retrieve onboarding data
-export const getOnboardingData = (): OnboardingData => {
-  const stored = localStorage.getItem("onboardingData");
-  return stored ? JSON.parse(stored) : onboardingData;
-};
+export interface AddProjectPayload {
+  project_title: string;
+  description: string;
+  technologies_used: string;
+}
+
+export async function addProjectsApi(
+  url: string,
+  payload: AddProjectPayload[]
+): Promise<unknown> {
+  try {
+    const response = await axios.post(url, payload, {
+      withCredentials: false,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("addProjectsApi error:", error);
+    throw error;
+  }
+}
+
 
 export const skillCategories = [
   {

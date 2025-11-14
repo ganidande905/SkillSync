@@ -1,4 +1,3 @@
-// src/features/dashboard/view/DashboardLayout.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../navbar/view/navbar";
@@ -12,8 +11,9 @@ export default function DashboardLayout() {
   const [activePage, setActivePage] = useState("dashboard");
   const navigate = useNavigate();
 
-  // Mock authentication check
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"; // Example: change according to your auth logic
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const userId = Number(localStorage.getItem("userId") || 0);
+  const userName = localStorage.getItem("userName") || "SkillSync user";
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -21,17 +21,33 @@ export default function DashboardLayout() {
     }
   }, [isLoggedIn, navigate]);
 
-  let PageComponent = DashBoardScreen;
+  const handleGoTeams = () => setActivePage("teams");
+  const handleGoLeaderboard = () => setActivePage("leaderboard");
+  const handleGoSkills = () => {
+    navigate("/onboarding/skills");
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let PageComponent: React.ComponentType<any> = () => (
+    <DashBoardScreen
+      userId={userId}
+      userName={userName}
+      onGoTeams={handleGoTeams}
+      onGoLeaderboard={handleGoLeaderboard}
+      onGoSkills={handleGoSkills}
+    />
+  );
+
   if (activePage === "profile") PageComponent = ProfilePage;
   if (activePage === "teams") PageComponent = TeamPage;
   if (activePage === "leaderboard") PageComponent = LeaderboardPage;
 
-  if (!isLoggedIn) return null; // Prevent rendering before redirect
+  if (!isLoggedIn) return null;
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className="dashboard-layout-root">
       <Navbar activePage={activePage} setActivePage={setActivePage} />
-      <div style={{ flex: 1, marginLeft: 240 }}>
+      <div className="dashboard-layout-content">
         <PageComponent />
       </div>
     </div>
