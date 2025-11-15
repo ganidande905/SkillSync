@@ -5,7 +5,6 @@ import "../../onboarding/styles/onboarding.css";
 import { onboardingData, interestCategories } from "../model/onboardingModel";
 import { submitInterests } from "../controller/Onboardingcontroller";
 
-
 const AddInterestsPage: React.FC = () => {
   const navigate = useNavigate();
 
@@ -56,66 +55,128 @@ const AddInterestsPage: React.FC = () => {
     navigate("/onboarding/projects");
   };
 
-  // flatten suggestion list (only first 3 categories, first 8 each like before)
+  // flatten suggestion list (only first 3 categories, first 8 each)
   const allSuggested = interestCategories
     .slice(0, 3)
     .flatMap((category) => category.items.slice(0, 8));
 
-  // selected interests that came from suggestions
   const selectedSuggested = interests.filter((i) => allSuggested.includes(i));
-
-  // custom interests that user typed
   const customInterests = interests.filter((i) => !allSuggested.includes(i));
-
-  // suggestions still available (not yet selected)
   const remainingSuggestions = allSuggested.filter(
     (i) => !interests.includes(i)
   );
 
   return (
     <motion.div
-      className="onboarding-container"
-      initial={{ opacity: 0, x: -50 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 50 }}
-      transition={{ duration: 0.4 }}
+      className="onboarding-page"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -24 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
     >
-      <h1 className="logo">SKILLSYNC</h1>
+      {/* background orbs + noise */}
+      <div className="onboarding-orb orb-1" />
+      <div className="onboarding-orb orb-2" />
+      <div className="onboarding-noise" />
 
-      <div className="onboarding-card">
-        <div className="step-indicators">
-          <button
-            type="button"
-            className="dot"
-            onClick={() => navigate("/onboarding/skills")}
-          />
-          <button
-            type="button"
-            className="dot active"
-            onClick={() => navigate("/onboarding/interests")}
-          />
-          <button
-            type="button"
-            className="dot"
-            onClick={() => navigate("/onboarding/projects")}
-          />
-        </div>
+      {/* top header */}
+      <header className="onboarding-header">
+        <span className="onboarding-logo-pill">
+          <span className="onboarding-dot" />
+          <span className="onboarding-logo-text">SkillSync</span>
+        </span>
+        <span className="onboarding-step-label">Step 2 · Interests</span>
+      </header>
 
-        <h2>Share Your Interests</h2>
-        <p>Pick a few topics or areas that excite you.</p>
+      <div className="onboarding-shell">
+        {/* left hero */}
+        <section className="onboarding-hero">
+          <h1 className="onboarding-title">What keeps you curious?</h1>
+          <p className="onboarding-subtitle">
+            Choose the topics, domains, and areas you genuinely enjoy exploring.
+            This helps SkillSync suggest teams and projects that you’ll actually
+            want to work on.
+          </p>
 
-        {error && <p className="error-text">{error}</p>}
+          <div className="onboarding-status-chip">
+            <span className="status-pulse" />
+            <span>Interests power your recommendations and matches.</span>
+          </div>
+        </section>
 
-        {/* 🔹 Selected interests “moved” to this top area */}
-        {(selectedSuggested.length > 0 || customInterests.length > 0) && (
-          <div className="selected-interests">
-            <p className="selected-label">Selected interests:</p>
+        {/* right glass card */}
+        <section className="onboarding-card">
+          {/* step dots */}
+          <div className="step-indicators">
+            <button
+              type="button"
+              className="step-dot"
+              onClick={() => navigate("/onboarding/skills")}
+            />
+            <button
+              type="button"
+              className="step-dot active"
+              onClick={() => navigate("/onboarding/interests")}
+            />
+            <button
+              type="button"
+              className="step-dot"
+              onClick={() => navigate("/onboarding/projects")}
+            />
+          </div>
+
+          <div className="onboarding-card-header">
+            <h2>Share your interests</h2>
+            <p>Pick a few topics or areas that excite you.</p>
+          </div>
+
+          {error && <p className="error-text">{error}</p>}
+
+          {/* Selected interests */}
+          {(selectedSuggested.length > 0 || customInterests.length > 0) && (
+            <div className="selected-skills-block">
+              <p className="selected-label">Selected interests</p>
+              <div className="selected-skills-grid">
+                {[...selectedSuggested, ...customInterests].map((interest) => (
+                  <button
+                    key={interest}
+                    type="button"
+                    className="tag tag-selected"
+                    onClick={() => toggleInterest(interest)}
+                  >
+                    {interest}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* custom interest input */}
+          <div className="input-row">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Add an interest (e.g., AI, Web, Mobile)"
+              className="skill-input"
+            />
+            <button
+              type="button"
+              className="add-skill-btn"
+              onClick={handleAdd}
+            >
+              Add
+            </button>
+          </div>
+
+          {/* suggestions */}
+          <div className="suggested-block">
+            <p className="suggested-label">Quick add from suggestions</p>
             <div className="tag-container">
-              {[...selectedSuggested, ...customInterests].map((interest) => (
+              {remainingSuggestions.map((interest) => (
                 <button
                   key={interest}
                   type="button"
-                  className="tag selected"
+                  className="tag"
                   onClick={() => toggleInterest(interest)}
                 >
                   {interest}
@@ -123,51 +184,27 @@ const AddInterestsPage: React.FC = () => {
               ))}
             </div>
           </div>
-        )}
 
-        <div className="input-group">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Add an interest (e.g., AI, Web, Mobile)"
-          />
-          <button type="button" onClick={handleAdd}>
-            +
-          </button>
-        </div>
-
-        {/* 🔹 Suggestions (labels). Once clicked, they disappear from here and move up */}
-        <div className="tag-container">
-          {remainingSuggestions.map((interest) => (
+          {/* navigation */}
+          <div className="buttons">
             <button
-              key={interest}
               type="button"
-              className="tag"
-              onClick={() => toggleInterest(interest)}
+              className="back-btn"
+              onClick={() => navigate("/onboarding/skills")}
+              disabled={saving}
             >
-              {interest}
+              Back
             </button>
-          ))}
-        </div>
-
-        <div className="buttons">
-          <button
-            type="button"
-            className="back-btn"
-            onClick={() => navigate("/onboarding/skills")}
-            disabled={saving}
-          >
-            Back
-          </button>
-          <button
-            type="button"
-            className="next-btn"
-            onClick={handleNext}
-            disabled={saving}
-          >
-            {saving ? "Saving..." : "Next"}
-          </button>
-        </div>
+            <button
+              type="button"
+              className="next-btn"
+              onClick={handleNext}
+              disabled={saving}
+            >
+              {saving ? "Saving..." : "Next"}
+            </button>
+          </div>
+        </section>
       </div>
     </motion.div>
   );
