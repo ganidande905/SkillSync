@@ -1,3 +1,5 @@
+// src/features/auth/model/authModel.js
+
 /**
  * Call login API
  * @param {string} url 
@@ -26,7 +28,7 @@ export async function loginApi(url, credentials) {
  */
 export async function registerApi(url, data) {
   try {
-      
+    console.log("🔸 Sending register request to:", url);
 
     const response = await fetch(url, {
       method: "POST",
@@ -35,11 +37,11 @@ export async function registerApi(url, data) {
     });
 
     const text = await response.text();
-    
+    console.log("Raw Register Response:", response.status, text);
 
     try {
       const json = JSON.parse(text);
-    
+      console.log(" Parsed JSON:", json);
       return json;
     } catch {
       console.error("Invalid JSON response from backend");
