@@ -16,7 +16,6 @@ const RegisterPage: React.FC = () => {
   const [message, setMessage] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  // Fetch universities (debounced)
   useEffect(() => {
     if (!university.trim()) {
       setSuggestions([]);
@@ -63,7 +62,6 @@ const RegisterPage: React.FC = () => {
       <div className="auth-noise" />
 
       <div className="auth-shell">
-        {/* Left side hero (same language as login, but for sign up) */}
         <div className="auth-hero">
           <div className="auth-logo-pill">
             <span className="auth-dot" />
@@ -82,14 +80,12 @@ const RegisterPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right side: glass card */}
         <form className="auth-card" onSubmit={handleRegister}>
           <div className="auth-card-header">
             <h2>Register</h2>
             <p>It only takes a minute to get started.</p>
           </div>
 
-          {/* Email */}
           <div className="auth-field">
             <label htmlFor="email">Email</label>
             <div className="auth-input-shell">
@@ -105,8 +101,6 @@ const RegisterPage: React.FC = () => {
               />
             </div>
           </div>
-
-          {/* Name */}
           <div className="auth-field">
             <label htmlFor="name">Name</label>
             <div className="auth-input-shell">
@@ -123,7 +117,6 @@ const RegisterPage: React.FC = () => {
             </div>
           </div>
 
-          {/* University + suggestions */}
           <div className="auth-field university-container">
             <label htmlFor="university">University (India)</label>
             <div className="auth-input-shell">
@@ -146,7 +139,7 @@ const RegisterPage: React.FC = () => {
                     key={index}
                     className="suggestion-item"
                     onClick={() => handleSuggestionClick(s)}
-                    onMouseDown={(e) => e.preventDefault()} // keeps input focus
+                    onMouseDown={(e) => e.preventDefault()}
                   >
                     {s}
                   </li>
@@ -154,8 +147,6 @@ const RegisterPage: React.FC = () => {
               </ul>
             )}
           </div>
-
-          {/* Password */}
           <div className="auth-field">
             <label htmlFor="password">Password</label>
             <div className="auth-input-shell">
@@ -171,8 +162,6 @@ const RegisterPage: React.FC = () => {
               />
             </div>
           </div>
-
-          {/* Submit Button */}
           <button
             className="ss-btn ss-btn-full ss-btn-primary ss-btn-medium auth-primary-btn"
             disabled={loading}
