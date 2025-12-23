@@ -2,7 +2,7 @@ version: "3.9"
 services:
   vision:
     image: ghcr.io/ganidande905/skillsync:${TAG:-latest}
-    container_name: vision
+    container_name: skillsync
     restart: unless-stopped
     networks:
       - proxy
