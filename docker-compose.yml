@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  vision:
+    image: ghcr.io/ganidande905/skillsync:${TAG:-latest}
+    container_name: vision
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
