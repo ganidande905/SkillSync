@@ -67,7 +67,7 @@ jobs:
         runs-on: ubuntu-latest
     
         steps:
-            - name: Deploy with Docker Compose (Vision)
+            - name: Deploy with Docker Compose (skillsync)
               uses: appleboy/ssh-action@v1.0.3
               with:
                 host: ${{ secrets.VM_HOST }}
@@ -82,7 +82,7 @@ jobs:
                   fi
                   TAG="${{ github.ref_name}}"
                   IMAGE="${{ env.REGISTRY}}/${{ needs.build-and-push.outputs.image_name}}:${TAG}"
-                  echo "Deploying Vision to ${REMOTE_DIR} with image ${IMAGE}"
+                  echo "Deploying skillsync to ${REMOTE_DIR} with image ${IMAGE}"
                   cd "$REMOTE_DIR"
                   echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
                   docker pull "$IMAGE"
